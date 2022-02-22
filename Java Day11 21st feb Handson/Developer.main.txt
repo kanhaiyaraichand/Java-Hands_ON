@@ -1,0 +1,61 @@
+Question 1
+1. Create a bank table with account number, customer name, available balance and phone number. Create the
+application through that the customer can see their account information and can withdraw or deposit the
+money.
+2. By using the above bank table the developer should write down the restrictions for customer to check their
+account limit.
+a) customer can't withdraw money if available balance is 10000 or less.
+b) whenever the customer deposit the money the deposited amount and the updated amount ( available
+balance) must displayed on screen.
+c) developer should enter the customer details at run time.
+
+
+package com.org.gen.day11HandsOn;
+
+
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Scanner;
+
+public class Developer {
+	static Scanner sc = new Scanner(System.in);
+	public static void main(String[] args) {
+		// TODO Auto-generated main block
+		try{
+			Connection con = GetConnection.getConnection();
+			System.out.println("Enter account name to add ");
+			String name = sc.nextLine();
+			System.out.println("Enter account no:");
+			int acc = sc.nextInt();
+			System.out.println("Enter balance to add ");
+			int balance=sc.nextInt();
+			System.out.println("Enter mobile no:");
+			long  l= sc.nextLong();
+			System.out.println("Entered details:"+name +"  "+acc+" "+balance +"  "+l);
+			PreparedStatement pr =con.prepareStatement("insert into bank values(?,?,?,?)");
+			pr.setInt(1, acc);
+			pr.setString(2, name);
+			pr.setInt(3, balance);
+			pr.setLong(4, l);
+			System.out.println("Record saved:"+pr);
+			
+			//step 4
+			int data = pr.executeUpdate();
+			System.out.println("record executed.."+data);
+			pr=con.prepareStatement("select * from bank");
+			ResultSet rs=pr.executeQuery();
+			while(rs.next()) {
+				System.out.println(rs.getInt(1)+" "+rs.getString(2)+" "+rs.getInt(3)+" "+rs.getLong(4));
+			}
+			con.close();
+//			
+		}catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			}
+		}
+
+}
